@@ -4,7 +4,7 @@ from src.chooser import chooser
 from src.response import DialogsResponse
 
 
-@chooser.register(command='что')
+@chooser.register(command=r'(что (сейчас )?играет)|(какая (сейчас )?песня)')
 async def current_song_handler(request: web.Request) -> web:
     spotify_api = request.app['spotify_api']
     data = spotify_api.current_user_playing_track()

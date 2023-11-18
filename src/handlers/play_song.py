@@ -7,7 +7,7 @@ from src.chooser import chooser
 from src.response import DialogsResponse
 
 
-@chooser.register(command='включи')
+@chooser.register(command=r'((включи)|(поставь)).*')
 async def play_song_handler(request: Request):
     spotify_api: spotipy.Spotify = request.app['spotify_api']
 

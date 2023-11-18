@@ -1,24 +1,35 @@
+import re
 from typing import Dict, Any, Callable, Awaitable
 
 from aiohttp import web
-
-from src.handlers.welcome import welcome_handler
-from src.handlers.not_found import not_found_handler
 
 
 Handler = Callable[[web.Request, ], Awaitable[Any]]
 
 
 class DialogsCommandChooser:
-    def __init__(self, welcome_handler_: Handler, not_found_handler_: Handler):
-        self.handlers: Dict[str, Handler] = {}
-        self.welcome_handler: Handler = welcome_handler_
-        self.not_found_handler: Handler = not_found_handler_
+    def __init__(self):
+        self._handlers: Dict[str, Handler] = {}
+        self._welcome_handler: Handler | None = None
+        self._not_found_handler: Handler | None = None
 
-    def register(self, command: str):
+    def register(self, command: str | None = None, welcome: bool = False, not_found: bool = False):
         def decorator(handler: Handler):
-            self.handlers[command.lower()] = handler
-            return handler
+            if command is not None:
+                self._handlers[command] = handler
+                return handler
+
+            if welcome:
+                self._welcome_handler = handler
+                return handler
+
+            if not_found:
+                self._not_found_handler = not_found
+                return handler
+
+            raise ValueError(
+                'None of the args (command, welcome, not_found) were passed. Can\'t register'
+            )
         return decorator
 
     async def do_route(self, request: web.Request):
@@ -29,18 +40,15 @@ class DialogsCommandChooser:
 
         data: Dict[str, Any] = await request.json()
 
-        command: str | None = next(iter(data['request']['nlu']['tokens']), None)
-        if command is None:
-            return await self.welcome_handler(request)
+        command: str = data['request']['command']
+        if not command:
+            return await self._welcome_handler(request)
 
-        handler: Handler | None = self.handlers.get(command)
-        if handler is None:
-            return await self.not_found_handler(request)
+        for _regex, _handler in self._handlers.items():
+            if re.match(_regex, command):
+                return await _handler(request)
 
-        return await handler(request)
+        return await self._not_found_handler(request)
 
 
-chooser = DialogsCommandChooser(
-    welcome_handler_=welcome_handler,
-    not_found_handler_=not_found_handler,
-)
+chooser = DialogsCommandChooser()
