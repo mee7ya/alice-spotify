@@ -24,7 +24,7 @@ class DialogsCommandChooser:
                 return handler
 
             if not_found:
-                self._not_found_handler = not_found
+                self._not_found_handler = handler
                 return handler
 
             raise ValueError(
