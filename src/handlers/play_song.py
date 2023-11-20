@@ -1,3 +1,5 @@
+import asyncio
+import os
 from typing import Any, Dict, List
 
 import spotipy
@@ -9,6 +11,9 @@ from src.response import DialogsResponse
 
 @chooser.register(command=r'((включи)|(поставь)).*')
 async def play_song_handler(request: Request):
+    def start_playback() -> None:
+        spotify_api.start_playback(context_uri=album_uri, offset={'uri': song_uri})
+
     spotify_api: spotipy.Spotify = request.app['spotify_api']
 
     data: Dict[str, Any] = await request.json()
@@ -34,9 +39,10 @@ async def play_song_handler(request: Request):
     song_uri: str = song['uri']
     album_uri: str = song['album']['uri']
 
-    spotify_api.start_playback(context_uri=album_uri, offset={'uri': song_uri})
+    loop: asyncio.AbstractEventLoop = asyncio.get_running_loop()
+    loop.call_later(delay=float(os.environ['PLAYBACK_GLOBAL_DELAY']), callback=start_playback)
 
     return DialogsResponse(
-        text=f'Включила {song_name} от {artist_name}',
-        tts=f'Включила {song_name} от {artist_name}',
+        text=f'Включаю {song_name} от {artist_name}',
+        tts=f'Включаю {song_name} от {artist_name}',
     ).get_response()
