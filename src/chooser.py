@@ -4,7 +4,7 @@ from typing import Dict, Any, Callable, Awaitable
 from aiohttp import web
 
 
-Handler = Callable[[web.Request, ], Awaitable[Any]]
+Handler = Callable[[web.Request, ], Awaitable[web.Response]]
 
 
 class DialogsCommandChooser:
@@ -33,11 +33,6 @@ class DialogsCommandChooser:
         return decorator
 
     async def do_route(self, request: web.Request):
-        if request.content_type != 'application/json':
-            raise NotImplementedError(
-                'Received wrong content_type. Only \'application/json\' is supported'
-            )
-
         data: Dict[str, Any] = await request.json()
 
         command: str = data['request']['command']

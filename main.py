@@ -7,6 +7,7 @@ from spotipy import SpotifyOAuth
 
 from src.handlers import *
 from src.chooser import chooser
+from src.middleware import *
 
 if __name__ == '__main__':
     load_dotenv()
@@ -16,13 +17,18 @@ if __name__ == '__main__':
             client_id=os.environ['SPOTIFY_CLIENT_ID'],
             client_secret=os.environ['SPOTIFY_CLIENT_SECRET'],
             redirect_uri=os.environ['SPOTIFY_REDIRECT_URI'],
-            scope='streaming app-remote-control user-read-currently-playing',
+            scope='streaming app-remote-control user-read-currently-playing user-read-playback-state',
             open_browser=False,
         )
     )
     spotify_api.me()
 
-    app = web.Application()
+    app = web.Application(
+        middlewares=[
+            content_type_middleware,
+            available_device_middleware,
+        ]
+    )
     app['spotify_api'] = spotify_api
     app.add_routes(
         [web.post(os.environ['SKILL_URL_PATH'], chooser.do_route)]

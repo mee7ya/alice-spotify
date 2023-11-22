@@ -18,6 +18,7 @@ license = {text = "MIT"}
 test = [
     "pytest>=7.4.3",
     "pytest-asyncio>=0.21.1",
+    "pytest-lazy-fixtures>=1.0.1",
 ]
 
 [tool.pytest.ini_options]

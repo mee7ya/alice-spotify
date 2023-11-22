@@ -5,7 +5,7 @@
 groups = ["default", "test"]
 strategy = ["cross_platform"]
 lock_version = "4.4"
-content_hash = "sha256:5285d517ab3615afceeed4db902bc0883b56068b8e7366889aa209f50fd7b963"
+content_hash = "sha256:6d579e4799282317b3c1d892a2548c7141ade47d3c9750841ef0bc8c07ae88bf"
 
 [[package]]
 name = "aiohttp"
@@ -261,6 +261,19 @@ dependencies = [
 files = [
     {file = "pytest-asyncio-0.21.1.tar.gz", hash = "sha256:40a7eae6dded22c7b604986855ea48400ab15b069ae38116e8c01238e9eeb64d"},
     {file = "pytest_asyncio-0.21.1-py3-none-any.whl", hash = "sha256:8666c1c8ac02631d7c51ba282e0c69a8a452b211ffedf2599099845da5c5c37b"},
+]
+
+[[package]]
+name = "pytest-lazy-fixtures"
+version = "1.0.1"
+requires_python = ">=3.8,<4.0"
+summary = "Allows you to use fixtures in @pytest.mark.parametrize."
+dependencies = [
+    "pytest<8.0.0,>=7.2.1",
+]
+files = [
+    {file = "pytest_lazy_fixtures-1.0.1-py3-none-any.whl", hash = "sha256:b85c30eaec34d1d2c2ad4c3b55a1301b9d89b963725bb50d7931bf38b02b5f8d"},
+    {file = "pytest_lazy_fixtures-1.0.1.tar.gz", hash = "sha256:29f11f1ce4e50475b645ea8a2fbcf981508ca911926f73cbb45df17163d48a6a"},
 ]
 
 [[package]]

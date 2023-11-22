@@ -12,7 +12,11 @@ from src.response import DialogsResponse
 @chooser.register(command=r'((включи)|(поставь)).*')
 async def play_song_handler(request: Request):
     def start_playback() -> None:
-        spotify_api.start_playback(context_uri=album_uri, offset={'uri': song_uri})
+        spotify_api.start_playback(
+            context_uri=album_uri,
+            offset={'uri': song_uri},
+            device_id=request.app['active_device_id'],
+        )
 
     spotify_api: spotipy.Spotify = request.app['spotify_api']
 
