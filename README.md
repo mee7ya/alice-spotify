@@ -16,5 +16,7 @@ Currently, it's for my own personal use and the project is WIP
 * Recognizes what song is currently playing
 * Searches for a song and switches to it
 
-And, I hope, more to come
+## Issues
+Dialogs Skill gets timed out if not used for a certain period of time. 
+Definitely messes up with QoL. Don't know a way around it
 
